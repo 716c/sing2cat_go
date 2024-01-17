@@ -169,13 +169,13 @@ func MergeOutbounds() []*simplejson.Json{
 	nodes = append(nodes, selectNode(tags))
 	// 查看ruleset
 	rule_set := clone.Clone(initial.GetValue("config").(*simplejson.Json).Get("rule_set").MustArray()).([]interface{})
-	for index,rule := range(rule_set){
+	for _,rule := range(rule_set){
 		// rule_set是一个存储字典的列表,rule此时是一个字典,遍历字典的key
 		for key := range(rule.(map[string]interface{})){
 			// 如果ruleset的中国标签为否则表示是外网连接,为其生成select出站
 			if !rule.(map[string]interface{})[key].(map[string]interface{})["china"].(bool){
 				rule_set_select_node := selectNode(tags)
-				rule_set_select_node.Set("tag",fmt.Sprint(index)+"select")
+				rule_set_select_node.Set("tag",key+"-select")
 				nodes = append(nodes, rule_set_select_node)
 			}
 		}
