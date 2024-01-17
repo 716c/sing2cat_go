@@ -50,13 +50,13 @@ func formatRuleSet() (*simplejson.Json ,string){
 	// 获取分流规则
 	shunt_rules := clone.Clone(original_rules[len(original_rules)-2:]).([]interface{})
 	// 此处逻辑于上面相同
-	for index,rule := range(custom_rules){
+	for _,rule := range(custom_rules){
 		for key := range(rule.(map[string]interface{})){
 			switch rule.(map[string]interface{})[key].(map[string]interface{})["china"]{
 			case true:
 				base_rules = append(base_rules, map[string]string{"rule_set":key,"outbound":"direct"})
 			case false:
-				base_rules = append(base_rules, map[string]string{"rule_set":key,"outbound":fmt.Sprint(index)+"select"})
+				base_rules = append(base_rules, map[string]string{"rule_set":key,"outbound":key+"-select"})
 			}
 		}
 	}
