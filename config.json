@@ -4,7 +4,7 @@
     "https://sub3.smallstrawberry.com/api/v1/client/subscrib"
   ],
   "rule_set": [
-    { "A": { "type": "local", "path": "/usr/", "china": true } },
-    { "B": { "type": "remote", "url": "sas", "china": false } }
+    { "规则集标签A": { "type": "local", "path": "/usr/", "china": true } },
+    { "规则集标签B": { "type": "remote", "url": "sas", "china": false } }
   ]
 }
