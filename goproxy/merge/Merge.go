@@ -47,15 +47,15 @@ func GenerateConfigJson() {
 	config_file,err := config.EncodePretty()
 	initial.ErrorLog(err,true,"解析json文件失败")
 	// 写入文件
-	_,err = os.Stat("config.json")
+	_,err = os.Stat("./temp/config.json")
 	if err!=nil{
 		if os.IsExist(err){
-			os.Remove("config.json")
+			os.Remove("./temp/config.json")
 		}
 	}else{
-		os.Remove("config.json")
+		os.Remove("./temp/config.json")
 	}
-	file ,err := os.OpenFile("config.json",os.O_CREATE,0)
+	file ,err := os.OpenFile("./temp/config.json",os.O_CREATE,0)
 	initial.ErrorLog(err,true,"写入json文件失败")
 	file.WriteString(string(config_file))
 	defer file.Close()
