@@ -1,7 +1,6 @@
 package merge
 
 import (
-	"fmt"
 	"goproxy/initial"
 
 	"github.com/bitly/go-simplejson"

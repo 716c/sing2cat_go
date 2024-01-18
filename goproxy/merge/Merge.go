@@ -3,6 +3,7 @@ package merge
 import (
 	"goproxy/initial"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/bitly/go-simplejson"
@@ -47,15 +48,17 @@ func GenerateConfigJson() {
 	config_file,err := config.EncodePretty()
 	initial.ErrorLog(err,true,"解析json文件失败")
 	// 写入文件
-	_,err = os.Stat("./temp/config.json")
+	dst_dir := filepath.Join(initial.GetValue("base_dir").(string),"/temp/config.json")
+
+	_,err = os.Stat(dst_dir)
 	if err!=nil{
-		if os.IsExist(err){
-			os.Remove("./temp/config.json")
+		if os.IsNotExist(err){
+			os.Remove(dst_dir)
 		}
 	}else{
-		os.Remove("./temp/config.json")
+		os.Remove(dst_dir)
 	}
-	file ,err := os.OpenFile("./temp/config.json",os.O_CREATE,0)
+	file ,err := os.OpenFile(dst_dir,os.O_CREATE|os.O_RDWR,0777)
 	initial.ErrorLog(err,true,"写入json文件失败")
 	file.WriteString(string(config_file))
 	defer file.Close()

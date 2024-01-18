@@ -1,0 +1,69 @@
+log:
+  level: info
+  file: "/opt/mosdns/mosdns.log"
+
+api:
+  http: "0.0.0.0:9091"
+
+include: []
+
+plugins:
+  - tag: hosts
+    type: hosts
+    args:
+      entries:
+        - "woshiwo.com 192.168.234.4"
+        - "shibuyiyangdeyanhuo.com 192.168.234.2"    
+
+  - tag: forward_dns
+    type: forward
+    args:
+      concurrent: 1
+      upstreams:
+        - addr: 1.1.1.1
+          bootstrap: 119.29.29.29
+          enable_pipeline: false
+          max_conns: 2
+          insecure_skip_verify: false
+          idle_timeout: 30
+          enable_http3: false
+
+  - tag: dns_sequence
+    type: sequence
+    args:
+      - exec: prefer_ipv4
+      - exec: $forward_dns
+
+  - tag: dns_query
+    type: sequence
+    args:
+      - exec: $dns_sequence
+
+  - tag: fallback
+    type: fallback
+    args:
+      primary: dns_query
+      secondary: dns_query
+      threshold: 500
+      always_standby: true
+
+  - tag: main_sequence
+    type: sequence
+    args:
+      - exec: $hosts
+      - matches:
+        - has_resp
+        exec: accept
+      - exec: $fallback
+
+  - tag: udp_server
+    type: udp_server
+    args:
+      entry: main_sequence
+      listen: "0.0.0.0:53"
+
+  - tag: tcp_server
+    type: tcp_server
+    args:
+      entry: main_sequence
+      listen: "0.0.0.0:53"
