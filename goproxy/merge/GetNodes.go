@@ -118,7 +118,9 @@ func getNodes() []*simplejson.Json{
 				// 如果节点数量是0,则没有意义往下进行,直接panic了
 				if nodes_num_count == 0{
 					err := errors.New("未能获得任何节点信息")
-					initial.ErrorLog(err,true,"节点信息获取失败")
+					initial.ErrorLog(err,false,"节点信息获取失败")
+					close(channel)
+					break
 				}
 			}
 		}
